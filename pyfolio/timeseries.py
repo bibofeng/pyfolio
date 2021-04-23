@@ -891,6 +891,11 @@ def get_max_drawdown_underwater(underwater):
     """
 
     valley = underwater.idxmin()  # end of the period
+    
+    # valley = underwater.index[np.argmin(underwater)]  # end of the period bbf
+    # below convert valley to date and used as index for peak and recovery search
+    valley = underwater[valley:].index[0]
+    
     # Find first 0
     peak = underwater[:valley][underwater[:valley] == 0].index[-1]
     # Find last 0
@@ -898,8 +903,8 @@ def get_max_drawdown_underwater(underwater):
         recovery = underwater[valley:][underwater[valley:] == 0].index[0]
     except IndexError:
         recovery = np.nan  # drawdown not recovered
-    #return peak, valley, recovery  ##bb fix valley error
-    return peak, underwater[valley:].index[0], recovery
+    return peak, valley, recovery  ##bb fix valley error
+    #return peak, underwater[valley:].index[0], recovery
 
 
 def get_max_drawdown(returns):
